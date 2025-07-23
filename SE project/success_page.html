@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful - College Timetable Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .success-container {
+            text-align: center;
+            max-width: 600px;
+            margin: 4rem auto;
+            padding: 2rem;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            color: var(--success-color);
+            margin-bottom: 2rem;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .success-message {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <div class="nav-menu">
+            <a href="home page.html"><i class="fas fa-home"></i> Home</a>
+            <a href="sets.html"><i class="fas fa-calendar-alt"></i> Timetables</a>
+            <a href="home page.html#about"><i class="fas fa-info-circle"></i> About</a>
+            <a href="home page.html#contact"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+    </nav>
+
+    <!-- Success Content -->
+    <div class="container">
+        <div class="success-container card fade-in">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1>Registration Successful!</h1>
+            <p class="success-message">Your account has been created successfully.</p>
+            <div class="action-buttons">
+                <button class="btn" onclick="window.location.href='home page.html'">
+                    <i class="fas fa-sign-in-alt"></i> Go to Login
+                </button>
+                <button class="btn btn-secondary" onclick="window.location.href='sets.html'">
+                    <i class="fas fa-calendar-alt"></i> View Timetables
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 College Timetable Generator | All Rights Reserved</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html> 

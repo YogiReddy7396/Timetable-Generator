@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Timetable Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <div class="nav-menu">
+            <a href="home page.html" class="active"><i class="fas fa-home"></i> Home</a>
+            <a href="sets.html"><i class="fas fa-calendar-alt"></i> Timetables</a>
+            <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+            <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Login Form -->
+        <div class="form-container fade-in">
+            <h1><i class="fas fa-sign-in-alt"></i> Login to Timetable Generator</h1>
+            <form id="loginForm" class="form-group" onsubmit="return handleLogin(event)">
+                <div class="form-group">
+                    <input type="text" name="username" id="login-username" class="form-control" placeholder="Username" required>
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" id="login-password" class="form-control" placeholder="Password" required>
+                    <div class="error-message"></div>
+                </div>
+                <div id="login-error" class="error" style="display: none;"></div>
+                <button type="submit" class="btn" id="login-button">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            <p>New to the site? <a href="#register" class="link" onclick="toggleForms()">Register here</a></p>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="form-container" id="register" style="display:none;">
+            <h1><i class="fas fa-user-plus"></i> Create an Account</h1>
+            <form id="registerForm" class="form-group" onsubmit="return handleRegistration(event)">
+                <div class="form-group">
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Choose a username" required>
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required>
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Create a password" required>
+                    <div class="error-message"></div>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirm password" required>
+                    <div class="error-message"></div>
+                </div>
+                <div id="register-error" class="error" style="display: none;"></div>
+                <button type="submit" class="btn" id="register-button">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+            </form>
+            <p>Already have an account? <a href="#" class="link" onclick="toggleForms()">Login here</a></p>
+        </div>
+
+        <!-- About Section -->
+        <section id="about" class="card fade-in">
+            <h2><i class="fas fa-info-circle"></i> About Our Timetable Generator</h2>
+            <p>Our College Timetable Generator is a powerful tool designed to help educational institutions create and manage their class schedules efficiently. With our intuitive interface and smart algorithms, you can:</p>
+            <ul>
+                <li>Generate conflict-free timetables</li>
+                <li>Manage multiple classes and courses</li>
+                <li>Handle teacher availability</li>
+                <li>Optimize classroom utilization</li>
+            </ul>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="card fade-in">
+            <h2><i class="fas fa-envelope"></i> Contact Us</h2>
+            <form id="contactForm" class="form-group">
+                <div class="form-group">
+                    <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" class="form-control" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" class="form-control" placeholder="Your Message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-secondary">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </form>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 College Timetable Generator | All Rights Reserved</p>
+            <div class="social-links">
+                <a href="#" class="link"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="link"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .timetable-container {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registration Successful!</h1>
+        <p>Your timetable has been successfully generated.</p>
+
+        <!-- Display the generated timetable -->
+        <div class="timetable-container">
+            <h2>Your Generated Timetable:</h2>
+            <div id="timetableDisplay"></div>
+        </div>
+    </div>
+
+    <script>
+        // Retrieve the timetable from localStorage and display it
+        const timetableHTML = localStorage.getItem("timetable");
+        if (timetableHTML) {
+            document.getElementById("timetableDisplay").innerHTML = timetableHTML;
+        } else {
+            document.getElementById("timetableDisplay").innerHTML = "<p>No timetable found. Please generate your timetable first.</p>";
+        }
+    </script>
+</body>
+</html>

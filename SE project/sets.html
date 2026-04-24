@@ -4,291 +4,282 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>College Timetable Generator - Sets</title>
+
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
-        .timetable-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .timetable-cell {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: var(--box-shadow);
-            transition: transform 0.3s ease;
-        }
-        
-        .timetable-cell:hover {
-            transform: translateY(-5px);
-        }
-        
         .faculty-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
             background-color: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
+            text-align: center;
         }
-        
-        .faculty-table th,
-        .faculty-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
+
         .faculty-table th {
             background-color: var(--primary-color);
             color: white;
+            padding: 12px;
         }
-        
+
+        .faculty-table td {
+            padding: 10px;
+        }
+
+        .faculty-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
         .faculty-table tr:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .set-selection {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        
-        .time-slot {
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        
-        .subject-list {
-            margin: 10px 0;
-            color: var(--text-color);
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        
-        .print-button {
-            background-color: var(--secondary-color);
-        }
-        
-        @media print {
-            .no-print {
-                display: none;
-            }
+            background-color: #f1f1f1;
         }
     </style>
 </head>
+
 <body>
-    <!-- Navigation -->
-    <nav class="nav-container no-print">
-        <div class="nav-menu">
-            <div class="nav-left">
-                <a href="sets.html" class="active"><i class="fas fa-calendar-alt"></i> Timetables</a>
-                <a href="home page.html#about"><i class="fas fa-info-circle"></i> About</a>
-                <a href="home page.html#contact"><i class="fas fa-envelope"></i> Contact</a>
-            </div>
-            <div class="nav-right">
-                <button class="btn btn-secondary" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        <!-- Set Selection -->
-        <div class="form-container fade-in set-selection">
-            <h1><i class="fas fa-calendar-alt"></i> Select Your Set</h1>
-            <p>Choose one of the following sets to generate your timetable:</p>
-            
-            <div class="form-group">
-                <select id="setSelection" class="form-control" onchange="loadTimetable()">
-                    <option value="">Select Set</option>
-                    <option value="A">Set A</option>
-                    <option value="B">Set B</option>
-                    <option value="C">Set C</option>
-                </select>
-            </div>
-        </div>
+<!-- SESSION CHECK -->
+<script>
+    if (!localStorage.getItem("currentUser")) {
+        window.location.href = "home page.html";
+    }
+</script>
 
-        <!-- Timetable Grid -->
-        <div class="form-container fade-in" id="timetableContainer" style="display: none;">
-            <h1><i class="fas fa-clock"></i> Timetable for Set <span id="selectedSet"></span></h1>
-            <p>Select faculty members for each time slot:</p>
-            
-            <div class="timetable-grid" id="timetableGrid">
-                <!-- Time slots will be dynamically inserted here -->
-            </div>
-            
-            <div class="action-buttons">
-                <button class="btn" onclick="generateTimetable()">
-                    <i class="fas fa-check-circle"></i> Generate Timetable
-                </button>
-            </div>
-            <p id="error_message" class="error"></p>
+<!-- NAV -->
+<nav class="nav-container no-print">
+    <div class="nav-menu">
+        <div class="nav-left">
+            <a href="sets.html" class="active">
+                <i class="fas fa-calendar-alt"></i> Timetables
+            </a>
+            <a href="home page.html#about">
+                <i class="fas fa-info-circle"></i> About
+            </a>
+            <a href="home page.html#contact">
+                <i class="fas fa-envelope"></i> Contact
+            </a>
         </div>
-
-        <!-- Faculty Selected Table -->
-        <div class="form-container fade-in" id="facultyTableContainer" style="display: none;">
-            <h1><i class="fas fa-users"></i> Generated Timetable for Set <span id="facultySet"></span></h1>
-            <table class="faculty-table" id="facultyTable">
-                <thead>
-                    <tr>
-                        <th>Time Slot</th>
-                        <th>Subject</th>
-                        <th>Faculty</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Selected faculties will be dynamically inserted here -->
-                </tbody>
-            </table>
-            
-            <div class="action-buttons no-print">
-                <button class="btn" onclick="modifyTimetable()">
-                    <i class="fas fa-edit"></i> Modify
-                </button>
-                <button class="btn print-button" onclick="window.print()">
-                    <i class="fas fa-print"></i> Print
-                </button>
-                <button class="btn btn-secondary" onclick="window.location.href='home page.html'">
-                    <i class="fas fa-home"></i> Back to Home
-                </button>
-            </div>
+        <div class="nav-right">
+            <button class="btn btn-secondary" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
+    </div>
+</nav>
 
-        <!-- Footer -->
-        <footer class="footer no-print">
-            <p>&copy; 2025 College Timetable Generator | All Rights Reserved</p>
-        </footer>
+<div class="container">
+
+    <!-- SELECT SET -->
+    <div class="form-container fade-in set-selection">
+        <h1><i class="fas fa-calendar-alt"></i> Select Your Set</h1>
+
+        <div class="form-group">
+            <select id="setSelection" class="form-control" onchange="loadTimetable()">
+                <option value="">Select Set</option>
+                <option value="A">Set A</option>
+                <option value="B">Set B</option>
+                <option value="C">Set C</option>
+            </select>
+        </div>
     </div>
 
-    <script src="js/main.js"></script>
-    <script>
-        // Define sets, their faculties, and subjects
-        const sets = {
-            A: [
-                { time: "8:00 AM - 9:00 AM", subjects: ["Maths"], faculty: ["Faculty A1", "Faculty A2", "Faculty A3"] },
-                { time: "9:00 AM - 10:00 AM", subjects: ["Physics"], faculty: ["Faculty A3", "Faculty A4", "Faculty A5", "Faculty A6"] },
-                { time: "10:00 AM - 11:00 AM", subjects: ["Chemistry"], faculty: ["Faculty A4", "Faculty A5", "Faculty A6"] },
-                { time: "11:00 AM - 12:00 PM", subjects: ["Computer Science"], faculty: ["Faculty A1", "Faculty A2", "Faculty A3", "Faculty A4", "Faculty A5", "Faculty A6", "Faculty A7"] },
-                { time: "1:00 PM - 2:00 PM", subjects: ["Biology"], faculty: ["Faculty A1", "Faculty A2", "Faculty A3"] },
-                { time: "2:00 PM - 3:00 PM", subjects: ["English"], faculty: ["Faculty A5", "Faculty A6", "Faculty A7"] },
-                { time: "3:00 PM - 4:00 PM", subjects: ["CLAD"], faculty: ["Faculty A1", "Faculty A2", "Faculty A3", "Faculty A4", "Faculty A5", "Faculty A6", "Faculty A7"] }
-            ],
-            B: [
-                { time: "8:00 AM - 9:00 AM", subjects: ["Physics"], faculty: ["Faculty B1", "Faculty B2", "Faculty B3"] },
-                { time: "9:00 AM - 10:00 AM", subjects: ["Maths"], faculty: ["Faculty B3", "Faculty B4", "Faculty B5", "Faculty B6"] },
-                { time: "10:00 AM - 11:00 AM", subjects: ["Chemistry"], faculty: ["Faculty B4", "Faculty B5", "Faculty B6"] },
-                { time: "11:00 AM - 12:00 PM", subjects: ["Computer Science"], faculty: ["Faculty B1", "Faculty B2", "Faculty B3", "Faculty B4", "Faculty B5", "Faculty B6", "Faculty B7"] },
-                { time: "1:00 PM - 2:00 PM", subjects: ["CLAD"], faculty: ["Faculty B1", "Faculty B2", "Faculty B3"] },
-                { time: "2:00 PM - 3:00 PM", subjects: ["English"], faculty: ["Faculty B5", "Faculty B6", "Faculty B7"] },
-                { time: "3:00 PM - 4:00 PM", subjects: ["Biology"], faculty: ["Faculty B1", "Faculty B2", "Faculty B3", "Faculty B4", "Faculty B5", "Faculty B6", "Faculty B7"] }
-            ],
-            C: [
-                { time: "8:00 AM - 9:00 AM", subjects: ["Physics"], faculty: ["Faculty C1", "Faculty C2", "Faculty C3"] },
-                { time: "9:00 AM - 10:00 AM", subjects: ["Maths"], faculty: ["Faculty C3", "Faculty C4", "Faculty C5", "Faculty C6"] },
-                { time: "10:00 AM - 11:00 AM", subjects: ["Chemistry"], faculty: ["Faculty C4", "Faculty C5", "Faculty C6"] },
-                { time: "11:00 AM - 12:00 PM", subjects: ["Computer Science"], faculty: ["Faculty C1", "Faculty C2", "Faculty C3", "Faculty C4", "Faculty C5", "Faculty C6", "Faculty C7"] },
-                { time: "1:00 PM - 2:00 PM", subjects: ["CLAD"], faculty: ["Faculty C1", "Faculty C2", "Faculty C3"] },
-                { time: "2:00 PM - 3:00 PM", subjects: ["English"], faculty: ["Faculty C5", "Faculty C6", "Faculty C7"] },
-                { time: "3:00 PM - 4:00 PM", subjects: ["Biology"], faculty: ["Faculty C1", "Faculty C2", "Faculty C3"] }
-            ]
-        };
+    <!-- TIMETABLE -->
+    <div class="form-container fade-in" id="timetableContainer" style="display:none;">
+        <h1>
+            <i class="fas fa-clock"></i>
+            Timetable for Set <span id="selectedSet"></span>
+        </h1>
 
-        let selectedSet = '';
+        <div class="timetable-grid" id="timetableGrid"></div>
 
-        function loadTimetable() {
-            selectedSet = document.getElementById("setSelection").value;
-            if (selectedSet) {
-                document.getElementById("timetableContainer").style.display = "block";
-                document.getElementById("selectedSet").textContent = selectedSet;
-                document.getElementById("facultyTableContainer").style.display = "none";
+        <div class="action-buttons">
+            <button class="btn" onclick="generateTimetable()">
+                <i class="fas fa-check-circle"></i> Generate Timetable
+            </button>
+        </div>
 
-                const timeSlots = sets[selectedSet];
-                const timetableGrid = document.getElementById("timetableGrid");
-                timetableGrid.innerHTML = "";
+        <p id="error_message" class="error"></p>
+    </div>
 
-                timeSlots.forEach((slot, index) => {
-                    const slotDiv = document.createElement("div");
-                    slotDiv.classList.add("timetable-cell", "fade-in");
-                    slotDiv.innerHTML = `
-                        <div class="time-slot">
-                            <i class="far fa-clock"></i> ${slot.time}
-                        </div>
-                        <div class="subject-list">
-                            <i class="fas fa-book"></i> ${slot.subjects.join(", ")}
-                        </div>
-                        <div class="form-group">
-                            <select id="slot${index}" class="form-control">
-                                <option value="">Select Faculty</option>
-                                ${slot.faculty.map(faculty => `<option value="${faculty}">${faculty}</option>`).join("")}
-                            </select>
-                        </div>
-                    `;
-                    timetableGrid.appendChild(slotDiv);
-                });
-            }
-        }
+    <!-- RESULT -->
+    <div class="form-container fade-in" id="facultyTableContainer" style="display:none;">
+        <h1>
+            <i class="fas fa-users"></i>
+            Generated Timetable for Set <span id="facultySet"></span>
+        </h1>
 
-        function generateTimetable() {
-            const timeSlots = sets[selectedSet];
-            let isValid = true;
-            let selectedFaculties = [];
-            const errorMessage = document.getElementById("error_message");
-            errorMessage.textContent = "";
+        <table class="faculty-table" id="facultyTable">
+            <thead>
+                <tr>
+                    <th>Time Slot</th>
+                    <th>Subject</th>
+                    <th>Faculty</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
 
-            for (let i = 0; i < timeSlots.length; i++) {
-                const selectedFaculty = document.getElementById(`slot${i}`).value;
-                if (!selectedFaculty) {
-                    isValid = false;
-                    break;
+        <!-- CLEAN BUTTONS -->
+        <div class="action-buttons no-print">
+
+            <button class="btn" onclick="modifyTimetable()">
+                <i class="fas fa-edit"></i> Modify
+            </button>
+
+            <button class="btn print-button" onclick="window.print()">
+                <i class="fas fa-print"></i> Print
+            </button>
+
+            <button class="btn btn-secondary" onclick="window.location.href='home page.html'">
+                <i class="fas fa-home"></i> Back to Home
+            </button>
+
+        </div>
+    </div>
+
+</div>
+
+<footer class="footer no-print">
+    <p>&copy; 2025 College Timetable Generator</p>
+</footer>
+
+<script src="js/main.js"></script>
+
+<script>
+
+    function logout() {
+        localStorage.removeItem("currentUser");
+        window.location.href = "home page.html";
+    }
+
+    const sets = {
+        A: [
+            { time: "8:00 AM - 9:00 AM", subject: "Maths", faculty: ["A1","A2","A3","A4"] },
+            { time: "9:00 AM - 10:00 AM", subject: "Physics", faculty: ["A3","A4","A5","A6"] },
+            { time: "10:00 AM - 11:00 AM", subject: "Chemistry", faculty: ["A4","A5","A6","A7"] },
+            { time: "11:00 AM - 12:00 PM", subject: "CS", faculty: ["A1","A2","A3","A4"] },
+            { time: "1:00 PM - 2:00 PM", subject: "Bio", faculty: ["A1","A2","A3","A6"] },
+            { time: "2:00 PM - 3:00 PM", subject: "Eng", faculty: ["A5","A6","A7","A2"] }
+        ],
+        B: [
+            { time: "8:00 AM - 9:00 AM", subject: "Physics", faculty: ["B1","B2","B3","B4"] },
+            { time: "9:00 AM - 10:00 AM", subject: "Maths", faculty: ["B3","B4","B5","B6"] },
+            { time: "10:00 AM - 11:00 AM", subject: "Chemistry", faculty: ["B4","B5","B6","B7"] },
+            { time: "11:00 AM - 12:00 PM", subject: "CS", faculty: ["B1","B2","B3","B4"] },
+            { time: "1:00 PM - 2:00 PM", subject: "CLAD", faculty: ["B1","B2","B3","B5"] },
+            { time: "2:00 PM - 3:00 PM", subject: "Eng", faculty: ["B5","B6","B7","B2"] }
+        ],
+        C: [
+            { time: "8:00 AM - 9:00 AM", subject: "Physics", faculty: ["C1","C2","C3","C4"] },
+            { time: "9:00 AM - 10:00 AM", subject: "Maths", faculty: ["C3","C4","C5","C6"] },
+            { time: "10:00 AM - 11:00 AM", subject: "Chemistry", faculty: ["C4","C5","C6","C7"] },
+            { time: "11:00 AM - 12:00 PM", subject: "CS", faculty: ["C1","C2","C3","C4"] },
+            { time: "1:00 PM - 2:00 PM", subject: "CLAD", faculty: ["C1","C2","C3","C5"] },
+            { time: "2:00 PM - 3:00 PM", subject: "Eng", faculty: ["C5","C6","C7","C2"] }
+        ]
+    };
+
+    let selectedSet = '';
+
+    function loadTimetable() {
+        selectedSet = document.getElementById("setSelection").value;
+        if (!selectedSet) return;
+
+        document.getElementById("timetableContainer").style.display = "block";
+        document.getElementById("selectedSet").textContent = selectedSet;
+        document.getElementById("facultyTableContainer").style.display = "none";
+
+        const grid = document.getElementById("timetableGrid");
+        grid.innerHTML = "";
+
+        sets[selectedSet].forEach((slot, i) => {
+            const div = document.createElement("div");
+            div.className = "timetable-cell fade-in";
+
+            div.innerHTML = `
+                <div class="time-slot">${slot.time}</div>
+                <div class="subject-list">${slot.subject}</div>
+
+                <div class="form-group">
+                    <select id="slot${i}" class="form-control" onchange="updateFacultyOptions()">
+                        <option value="">Select Faculty</option>
+                        ${slot.faculty.map(f => `<option value="${f}">${f}</option>`).join("")}
+                    </select>
+                </div>
+            `;
+
+            grid.appendChild(div);
+        });
+    }
+
+    function updateFacultyOptions() {
+        let selects = document.querySelectorAll("select[id^='slot']");
+        let selected = [];
+
+        selects.forEach(s => {
+            if (s.value) selected.push(s.value);
+        });
+
+        selects.forEach(s => {
+            let current = s.value;
+
+            Array.from(s.options).forEach(opt => {
+                if (!opt.value) return;
+
+                if (selected.includes(opt.value) && opt.value !== current) {
+                    opt.disabled = true;
+                    opt.textContent = opt.value + " (Already Selected)";
                 } else {
-                    selectedFaculties.push({
-                        time: timeSlots[i].time,
-                        subject: timeSlots[i].subjects[0],
-                        faculty: selectedFaculty
-                    });
+                    opt.disabled = false;
+                    opt.textContent = opt.value;
                 }
-            }
+            });
+        });
+    }
 
-            if (!isValid) {
-                errorMessage.textContent = "Please select a faculty for each time slot.";
+    function generateTimetable() {
+        let data = sets[selectedSet];
+        let result = [];
+        let error = document.getElementById("error_message");
+        error.textContent = "";
+
+        for (let i = 0; i < data.length; i++) {
+            let val = document.getElementById(`slot${i}`).value;
+
+            if (!val) {
+                error.textContent = "Please select all faculty";
                 return;
             }
 
-            document.getElementById("timetableContainer").style.display = "none";
-            document.getElementById("facultyTableContainer").style.display = "block";
-            document.getElementById("facultySet").textContent = selectedSet;
-
-            const facultyTable = document.getElementById("facultyTable").getElementsByTagName("tbody")[0];
-            facultyTable.innerHTML = "";
-            
-            selectedFaculties.forEach(selection => {
-                const row = facultyTable.insertRow();
-                const timeCell = row.insertCell(0);
-                const subjectCell = row.insertCell(1);
-                const facultyCell = row.insertCell(2);
-                
-                timeCell.innerHTML = `<i class="far fa-clock"></i> ${selection.time}`;
-                subjectCell.innerHTML = `<i class="fas fa-book"></i> ${selection.subject}`;
-                facultyCell.innerHTML = `<i class="fas fa-user"></i> ${selection.faculty}`;
+            result.push({
+                time: data[i].time,
+                subject: data[i].subject,
+                faculty: val
             });
         }
 
-        function modifyTimetable() {
-            document.getElementById("facultyTableContainer").style.display = "none";
-            document.getElementById("timetableContainer").style.display = "block";
-            document.getElementById("error_message").textContent = "";
-        }
-    </script>
+        document.getElementById("timetableContainer").style.display = "none";
+        document.getElementById("facultyTableContainer").style.display = "block";
+        document.getElementById("facultySet").textContent = selectedSet;
+
+        let tbody = document.querySelector("#facultyTable tbody");
+        tbody.innerHTML = "";
+
+        result.forEach(r => {
+            let row = tbody.insertRow();
+            row.insertCell(0).textContent = r.time;
+            row.insertCell(1).textContent = r.subject;
+            row.insertCell(2).textContent = r.faculty;
+        });
+    }
+
+    function modifyTimetable() {
+        document.getElementById("facultyTableContainer").style.display = "none";
+        document.getElementById("timetableContainer").style.display = "block";
+    }
+
+</script>
+
 </body>
 </html>
-

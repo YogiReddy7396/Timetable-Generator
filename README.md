@@ -27,26 +27,16 @@ A simple web-based mini project that allows students to generate a conflict-free
 ## 📸 Screenshots
 
 ### 🔹 Registration Page
-
-![Registration](images/register.png)
-
----
+![Registration](SE%20project/register.png)
 
 ### 🔹 Login + About + Contact
+![Login](SE%20project/login_about_contact.png)
 
-![Login](images/login_about_contact.png)
+### 🔹 Set Selection
+![Set](SE%20project/set_selection.png)
 
----
-
-### 🔹 Set Selection & Faculty Selection
-
-![Set Selection](images/set_selection.png)
-
----
-
-### 🔹 Generated Timetable Output
-
-![Timetable](images/timetable_output.png)
+### 🔹 Timetable Output
+![Output](SE%20project/timetable_output.png)
 
 ---
 
